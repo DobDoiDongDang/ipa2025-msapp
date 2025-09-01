@@ -5,7 +5,10 @@ from flask import redirect
 from flask import url_for
 from pymongo import MongoClient
 from bson import ObjectId
-client = MongoClient("mongodb://mongo:27017/")
+
+import os
+mongo_url = os.environ.get("MONGO_URI")
+client = MongoClient(mongo_url)
 mydb = client["mydatabase"]
 mycol = mydb["web"]
 

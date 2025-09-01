@@ -1,4 +1,15 @@
 services:
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-net
+    env_file:
+      - .env
+
   web:
     build: ./web
     ports:
@@ -12,30 +23,6 @@ services:
     environment:
       MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
       DB_NAME: "${DB_NAME}"
-  scheduler:
-    build: ./scheduler
-    depends_on:
-      - mongo
-      - rabbitmq
-    networks:
-      - app-net
-    env_file:
-      - .env
-    environment:
-      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
-      DB_NAME: "${DB_NAME}"
-      RABBITMQ_HOST: rabbitmq
-
-  mongo:
-    image: mongo:6
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - app-net
-    env_file:
-      - .env
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -46,6 +33,32 @@ services:
       - app-net
     env_file:
       - .env
+
+  scheduler:
+    build: ./scheduler
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-net
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "${DB_NAME}"
+      RABBITMQ_HOST: rabbitmq
+
+  worker:
+    build: ./worker
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-net
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "${DB_NAME}"
+      RABBITMQ_HOST: rabbitmq
 
 volumes:
   mongo-data:

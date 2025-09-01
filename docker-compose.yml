@@ -11,6 +11,20 @@ services:
       - .env
     environment:
       MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "${DB_NAME}"
+  scheduler:
+    build: ./scheduler
+    depends_on:
+      - mongo
+      - rabbitmq
+    networks:
+      - app-net
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
+      DB_NAME: "${DB_NAME}"
+      RABBITMQ_HOST: rabbitmq
 
   mongo:
     image: mongo:6
@@ -23,7 +37,7 @@ services:
     env_file:
       - .env
 
-  rabbitme:
+  rabbitmq:
     image: rabbitmq:3-management
     ports:
       - "15672:15672"

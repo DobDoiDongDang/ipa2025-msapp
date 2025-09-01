@@ -8,9 +8,10 @@ from bson import ObjectId
 
 import os
 mongo_url = os.environ.get("MONGO_URI")
+mongo_db = os.environ.get("DB_NAME")
 client = MongoClient(mongo_url)
-mydb = client["mydatabase"]
-mycol = mydb["web"]
+mydb = client[mongo_db]
+mycol = mydb["routers"]
 
 
 app = Flask(__name__)

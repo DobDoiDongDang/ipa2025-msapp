@@ -31,7 +31,7 @@ if __name__ == "__main__":
     INTERVAL = 30.0
     next_run = time.monotonic()
     count = 0
-    time.sleep(5)
+    time.sleep(10)
 
     while True:
         now = time.time()

@@ -1,4 +1,5 @@
-import pika, os
+import pika
+import os
 
 
 def produce(host, body):

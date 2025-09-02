@@ -1,5 +1,4 @@
 from netmiko import ConnectHandler
-import os
 
 
 def create_device(ip, username, password):

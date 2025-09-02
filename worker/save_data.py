@@ -8,6 +8,12 @@ client = MongoClient(mongo_url)
 mydb = client[mongo_db]
 mycol = mydb["interface_status"]
 
-def save_interface(router_ip, data):
-    mycol.insert_one({"router_ip": router_ip, "timestamp" : str(datetime.datetime.now()), "interfaces":data})
 
+def save_interface(router_ip, data):
+    mycol.insert_one(
+        {
+            "router_ip": router_ip,
+            "timestamp": str(datetime.datetime.now()),
+            "interfaces": data,
+        }
+    )

@@ -1,17 +1,19 @@
 import pika, json, os, time
 from ssh_router import get_int_data
 from save_data import save_interface
+
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
-RABBITMQ_QUEUE = 'router_jobs'
+RABBITMQ_QUEUE = "router_jobs"
 user = os.getenv("RABBITMQ_DEFAULT_USER")
-pwd  = os.getenv("RABBITMQ_DEFAULT_PASS")
+pwd = os.getenv("RABBITMQ_DEFAULT_PASS")
+
 
 def callback(ch, method, properties, body):
     print("Got it queue :", body.decode())
     message_data = json.loads(body.decode())
-    ip = message_data.get('ip')
-    username = message_data.get('username')
-    password = message_data.get('password')
+    ip = message_data.get("ip")
+    username = message_data.get("username")
+    password = message_data.get("password")
     int_data = get_int_data(ip, username, password)
     save_interface(ip, int_data)
     print("Done (;")
@@ -21,7 +23,9 @@ def callback(ch, method, properties, body):
 def listening():
     try:
         creds = pika.PlainCredentials(user, pwd)
-        connect = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST, credentials=creds))
+        connect = pika.BlockingConnection(
+            pika.ConnectionParameters(RABBITMQ_HOST, credentials=creds)
+        )
         channel = connect.channel()
         channel.queue_declare(queue=RABBITMQ_QUEUE)
         print("Connected to rabbitmq waiting for queue")
@@ -33,6 +37,7 @@ def listening():
     except Exception as e:
         print(f"Error {e}")
 
+
 if __name__ == "__main__":
     INTERVAL = 60.0
     next_run = time.monotonic()
@@ -41,7 +46,7 @@ if __name__ == "__main__":
     while True:
         now = time.time()
         now_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
-        ms = int((now % 1) * 1000)  
+        ms = int((now % 1) * 1000)
         now_str_with_ms = f"{now_str}.{ms:03d}"
         print(f"[{now_str_with_ms}] run #{count}")
         listening()

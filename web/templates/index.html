@@ -15,7 +15,7 @@
 	<ul>
 		{% for user in data %}
 		<li>
-			<a href="{{ url_for('check_status', user.ip) }}">{{ user.ip }} </a> - {{ user.username }}
+			<a href="{{ url_for('check_status', ip=user.ip) }}">{{ user.ip }} </a> - {{ user.username }}
 			<form method="POST" action="{{ url_for('delete_comment', idx=user._id) }}" style="display:inline">
 				<button type="submit">Delete</button>
 			</form>

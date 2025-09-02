@@ -5,7 +5,6 @@ RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
 RABBITMQ_QUEUE = 'router_jobs'
 def callback(ch, method, properties, body):
     print("you got mail", body.decode())
-
     message_data = json.loads(body.decode())
     ip = message_data.get('ip')
     username = message_data.get('username')
@@ -17,18 +16,21 @@ def callback(ch, method, properties, body):
 
 
 def listening():
-    connect = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
-    channel = connect.channel()
-    channel.queue_declare(queue=RABBITMQ_QUEUE)
-
-    print("Waiting for Queue")
-
-    channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue=RABBITMQ_QUEUE, on_message_callback=callback)
-    channel.start_consuming()
+    try:
+        connect = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
+        channel = connect.channel()
+        channel.queue_declare(queue=RABBITMQ_QUEUE)
+        print("Connected to rabbitmq waiting for queue")
+        channel.basic_qos(prefetch_count=1)
+        channel.basic_consume(queue=RABBITMQ_QUEUE, on_message_callback=callback)
+        channel.start_consuming()
+    except pika.exceptions.AMQPConnectionError as e:
+        print(f"Can't connect to Rabbitmq: {e}")
+    except Exception as e:
+        print(f"Error {e}")
 
 if __name__ == "__main__":
-    INTERVAL = 30.0
+    INTERVAL = 60.0
     next_run = time.monotonic()
     count = 0
 

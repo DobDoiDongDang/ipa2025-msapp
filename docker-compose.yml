@@ -37,7 +37,6 @@ services:
   scheduler:
     build: ./scheduler
     depends_on:
-      - rabbitmq
       - mongo
     networks:
       - app-net
@@ -50,9 +49,7 @@ services:
 
   worker:
     build: ./worker
-    restart: on-failure
     depends_on:
-      - rabbitmq
       - mongo
     networks:
       - app-net

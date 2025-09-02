@@ -30,7 +30,7 @@ def main():
 @app.route("/router/<ip>")
 def check_status(ip):
     data = myint.find({"router_ip": ip})
-    lastest_data = list(data.sort("timestamp", -1).limit(3))
+    lastest_data = list(data.sort("timestamp", -1).limit(5))
     return render_template("router_detail.html", ip=ip, data=lastest_data)
 
 

@@ -45,12 +45,13 @@ services:
     environment:
       MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
       DB_NAME: "${DB_NAME}"
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
+      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
+
 
   worker:
     build: ./worker
-    depends_on:
-      - mongo
     networks:
       - app-net
     env_file:
@@ -58,7 +59,9 @@ services:
     environment:
       MONGO_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/"
       DB_NAME: "${DB_NAME}"
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
+      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
 
 volumes:
   mongo-data:

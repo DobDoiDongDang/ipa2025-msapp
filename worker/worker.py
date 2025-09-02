@@ -3,8 +3,11 @@ from ssh_router import get_int_data
 from save_data import save_interface
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
 RABBITMQ_QUEUE = 'router_jobs'
+user = os.getenv("RABBITMQ_DEFAULT_USER")
+pwd  = os.getenv("RABBITMQ_DEFAULT_PASS")
+
 def callback(ch, method, properties, body):
-    print("you got mail", body.decode())
+    print("Got it queue :", body.decode())
     message_data = json.loads(body.decode())
     ip = message_data.get('ip')
     username = message_data.get('username')
@@ -17,7 +20,8 @@ def callback(ch, method, properties, body):
 
 def listening():
     try:
-        connect = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
+        creds = pika.PlainCredentials(user, pwd)
+        connect = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST, credentials=creds))
         channel = connect.channel()
         channel.queue_declare(queue=RABBITMQ_QUEUE)
         print("Connected to rabbitmq waiting for queue")

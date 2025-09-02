@@ -5,4 +5,5 @@ COPY  ./worker.py .
 COPY  ./ssh_router.py .
 COPY  ./save_data.py .
 RUN pip install --no-cache-dir --progress-bar off -r requirements.txt
+CMD echo "HELLOOOO"
 CMD python worker.py

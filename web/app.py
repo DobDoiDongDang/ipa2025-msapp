@@ -14,6 +14,8 @@ client = MongoClient(mongo_url)
 mydb = client[mongo_db]
 myint = mydb["interface_status"]
 mycol = mydb["routers"]
+print(f"MONGO_URL {mongo_url}")
+print(f"MONGO_DB {mongo_db}")
 
 
 app = Flask(__name__)

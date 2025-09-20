@@ -11,8 +11,11 @@ spec:
     path: web/manifests
   destination:
     server: https://kubernetes.default.svc
-    namespace: '*'
+    namespace: devops-tools
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'

@@ -11,7 +11,7 @@ spec:
     path: web/manifests
   destination:
     server: https://kubernetes.default.svc
-    namespace: ipa2025
+    namespace: '*'
   syncPolicy:
     automated:
       prune: true
